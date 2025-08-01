@@ -37,8 +37,8 @@ tree = bot.tree
 # AVVIO BOT
 # ──────────────────────────────
 if __name__ == "__main__":
-    token = os.getenv("MINISTERO_TOKEN")
+    token = os.getenv("RI_TOKEN")
     if token:
         bot.run(token)
     else:
-        print("[ERRORE] MINISTERO_TOKEN mancante.")
+        print("[ERRORE] RI_TOKEN mancante.")
