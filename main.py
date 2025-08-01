@@ -4,7 +4,7 @@ import aiohttp
 import sqlite3
 from datetime import datetime
 from discord.ext import commands
-from discord import app_commands, Interaction, Embed, User
+from discord import app_commands, Interaction, Embed, User, TextChannel, ForumChannel
 from flask import Flask
 from threading import Thread
 
@@ -65,7 +65,12 @@ async def ping(interaction: discord.Interaction):
 )
 async def decreto_dpr(interaction: Interaction, nome: str, numero: str, link: str):
     allowed_roles = [1399830552588189827, 1255957467930558706]
-    if not any(role.id in allowed_roles for role in interaction.user.roles):
+    member = interaction.user
+
+    if not isinstance(member, discord.Member):
+        member = await interaction.guild.fetch_member(member.id)
+
+    if not any(role.id in allowed_roles for role in member.roles):
         return await interaction.response.send_message("❌ Non hai i permessi per usare questo comando.", ephemeral=True)
 
     content = f"""**<:RepubblicaItaliana:1222964737692794961> | {nome}**
