@@ -44,6 +44,7 @@ async def on_ready():
     except Exception as e:
         print(f"❌ Errore nella sincronizzazione dei comandi: {e}")
     
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="i decreti"))
     print(f"🤖 Bot attivo come {bot.user}")
 
 # ──────────────────────────────
