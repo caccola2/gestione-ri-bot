@@ -34,6 +34,14 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
 # ──────────────────────────────
+# /ping
+# ──────────────────────────────
+@bot.tree.command(name="ping", description="Controlla se il bot è attivo")
+async def ping(interaction: discord.Interaction):
+    latency = round(bot.latency * 1000)  # in millisecondi
+    await interaction.response.send_message(f"✅ Il bot è attivo! Latenza: {latency}ms", ephemeral=True)
+
+# ──────────────────────────────
 # AVVIO BOT
 # ──────────────────────────────
 if __name__ == "__main__":
