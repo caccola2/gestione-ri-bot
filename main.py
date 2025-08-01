@@ -75,7 +75,7 @@ async def decreto_dpr(interaction: Interaction, nome: str, numero: str, link: st
 {link}"""
 
     try:
-        # Ottieni la guild per il canale textchat (dove inviare il decreto)
+        # Guild per il canale testo
         guild_text = bot.get_guild(1221870022868078673)
         canale_decreti = guild_text.get_channel(1247648939763830814) if guild_text else None
 
@@ -87,20 +87,21 @@ async def decreto_dpr(interaction: Interaction, nome: str, numero: str, link: st
         return await interaction.response.send_message(f"❌ Errore nell'invio del decreto nel canale: {e}", ephemeral=True)
 
     try:
-        # Ottieni la guild per il forum
+        # Guild per il forum
         guild_forum = bot.get_guild(1399826720835768461)
         forum = guild_forum.get_channel(1399895001462345759) if guild_forum else None
 
         if not isinstance(forum, discord.ForumChannel):
             return await interaction.response.send_message("❌ Forum D.P.R. non trovato o non valido.", ephemeral=True)
 
+        # Cerca il tag 'D.P.R.'
         tag_dpr = next((tag for tag in forum.available_tags if tag.name.lower() == "d.p.r."), None)
-        tags = [tag_dpr.id] if tag_dpr else []
+        tags = [tag_dpr] if tag_dpr else []
 
         await forum.create_thread(
             name=nome,
             content=content,
-            applied_tags=tags
+            applied_tags=tags  # <--- passa direttamente l'oggetto, non l'id
         )
 
     except Exception as e:
