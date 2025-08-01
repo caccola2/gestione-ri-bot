@@ -66,12 +66,7 @@ async def ping(interaction: discord.Interaction):
 )
 async def decreto_dpr(interaction: Interaction, nome: str, numero: str, link: str):
     allowed_roles = [1399830552588189827, 1255957467930558706]
-    member = interaction.user
-
-    if not isinstance(member, discord.Member):
-        member = await interaction.guild.fetch_member(member.id)
-
-    if not any(role.id in allowed_roles for role in member.roles):
+    if not any(role.id in allowed_roles for role in interaction.user.roles):
         return await interaction.response.send_message("❌ Non hai i permessi per usare questo comando.", ephemeral=True)
 
     content = f"""**<:RepubblicaItaliana:1222964737692794961> | {nome}**
@@ -80,8 +75,11 @@ async def decreto_dpr(interaction: Interaction, nome: str, numero: str, link: st
 {link}"""
 
     try:
-        canale_decreti = interaction.guild.get_channel(1247648939763830814)
-        if not isinstance(canale_decreti, TextChannel):
+        # Ottieni la guild per il canale textchat (dove inviare il decreto)
+        guild_text = bot.get_guild(1221870022868078673)
+        canale_decreti = guild_text.get_channel(1247648939763830814) if guild_text else None
+
+        if not isinstance(canale_decreti, discord.TextChannel):
             return await interaction.response.send_message("❌ Canale per decreti non trovato o non valido.", ephemeral=True)
 
         await canale_decreti.send(content)
@@ -89,10 +87,13 @@ async def decreto_dpr(interaction: Interaction, nome: str, numero: str, link: st
         return await interaction.response.send_message(f"❌ Errore nell'invio del decreto nel canale: {e}", ephemeral=True)
 
     try:
-        forum = interaction.guild.get_channel(1399895001462345759)
-        if not isinstance(forum, ForumChannel):
+        # Ottieni la guild per il forum
+        guild_forum = bot.get_guild(1399826720835768461)
+        forum = guild_forum.get_channel(1399895001462345759) if guild_forum else None
+
+        if not isinstance(forum, discord.ForumChannel):
             return await interaction.response.send_message("❌ Forum D.P.R. non trovato o non valido.", ephemeral=True)
-        
+
         tag_dpr = next((tag for tag in forum.available_tags if tag.name.lower() == "d.p.r."), None)
         tags = [tag_dpr.id] if tag_dpr else []
 
